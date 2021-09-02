@@ -4,19 +4,18 @@ const cTable = require("console.table");
 
 // class holding all db query methods for use throughout the app
 class DBQuery {
-  constructor(dbConnection) {
-    this.dbconnection = dbConnection;
-  }
+  constructor() {}
   viewEmployees() {
-    // ******* add JOIN to join all the tables *********
     const sqlQuery =
       'SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary,CONCAT (m.first_name," ", m.last_name) AS manager FROM employee LEFT JOIN employee as m ON m.id = employee.manager_id JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id';
-    this.dbconnection.query(sqlQuery, (err, results) => {
+    dbConnection.query(sqlQuery, (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        return cTable(results);
+        return console.table(results);
       }
     });
   }
 }
+
+module.exports = DBQuery;
