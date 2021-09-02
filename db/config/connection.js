@@ -1,6 +1,6 @@
 // import required libraries
 const mysql = require("mysql2");
-const env = require("dotenv");
+const env = require("dotenv").config();
 
 // set variable for mysql connection
 const dbConnection = mysql.createConnection({

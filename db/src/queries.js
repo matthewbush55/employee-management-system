@@ -2,6 +2,7 @@
 const dbConnection = require("../config/connection");
 const cTable = require("console.table");
 
+// class holding all db query methods for use throughout the app
 class DBQuery {
   constructor(dbConnection) {
     this.dbconnection = dbConnection;
