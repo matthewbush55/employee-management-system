@@ -9,7 +9,9 @@ class DBQuery {
   }
   viewEmployees() {
     // ******* add JOIN to join all the tables *********
-    this.dbconnection.query("SELECT * FROM employees", (err, results) => {
+    const sqlQuery =
+      'SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary,CONCAT (m.first_name," ", m.last_name) AS manager FROM employee LEFT JOIN employee as m ON m.id = employee.manager_id JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id';
+    this.dbconnection.query(sqlQuery, (err, results) => {
       if (err) {
         console.log(err);
       } else {
