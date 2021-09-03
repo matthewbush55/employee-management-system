@@ -82,22 +82,44 @@ function viewDepts() {
   });
 }
 
-// function to add a new employee
-function addEmployee() {
-  const sqlQuery = ("INSERT INTO employee SET ?", data);
-  dbConnection.query(sqlQuery, (err, results) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.table(results);
-      init();
-    }
+// TODO: function to add a new employee
+async function addEmployee() {
+  //select roles from the database to pass into question choices
+  const roleQuery = "SELECT title FROM role";
+  dbConnection.query(roleQuery, async (err, roles) => {
+    const mgrQuery = 'SELECT CONCAT (first_name," ", last_name) as manager FROM employee WHERE manager_id IS NULL';
+    dbConnection.query(mgrQuery, async (err, managers) => {
+      console.log(roles);
+      console.log(managers);
+      const response = await inquirer.prompt(questions.addEmployeeQuestions(roles, managers));
+      const newEmployee = {};
+      newEmployee.first_name = response.first_name;
+      newEmployee.last_name = response.last_name;
+
+      // dbConnection.query("SELECT id FROM role WHERE title = ?", response.role, (err, response) => {
+      //   newEmployee.role_id = response[0].id;
+
+      //   dbConnection.query("SELECT id FROM employee WHERE name = ?", response.manager, (err, response) => {
+      //     newEmployee.manager_id = response[0].id;
+
+      dbConnection.query("INSERT INTO employee SET ?", newEmployee, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Employee Added");
+          init();
+        }
+      });
+      //   });
+      // });
+    });
   });
 }
 
 // function to add a new role
 async function addRole() {
   dbConnection.query("SELECT name FROM department", async (err, departments) => {
+    console.log(departments);
     const response = await inquirer.prompt(questions.addRoleQuestions(departments));
 
     // create variable to hold newRole object properties
@@ -134,7 +156,7 @@ async function addDept() {
   });
 }
 
-// function to update a role in the database
+// TODO: function to update a role in the database
 function updateRole() {}
 
 // main function calls
