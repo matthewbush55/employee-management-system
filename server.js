@@ -1,13 +1,12 @@
 // import required libraries
 const inquirer = require("inquirer");
 const questions = require("./lib/questions");
-const DBQuery = require("./db/src/queries");
+const dbConnection = require("./config/connection");
+const cTable = require("console.table");
 // banner libraries
 const banner = require("asciiart-logo");
 const config = require("./package.json");
 
-// set variable creating an instance of the DBQuery class for new db queries
-const query = new DBQuery();
 // render banner image
 function renderBanner() {
   console.log(banner(config).render());
@@ -15,28 +14,29 @@ function renderBanner() {
 
 // start the app and present user with selection options
 async function init() {
+  console.log("\n");
   const selection = await inquirer.prompt(questions.mainMenu);
   switch (selection.action) {
     case questions.mainMenu.choices[0]:
-      query.viewEmployees();
+      viewEmployees();
       break;
     case questions.mainMenu.choices[1]:
-      query.addEmployee();
+      addEmployee();
       break;
     case questions.mainMenu.choices[2]:
-      query.updateRole();
+      updateRole();
       break;
     case questions.mainMenu.choices[3]:
-      query.viewRoles();
+      viewRoles();
       break;
     case questions.mainMenu.choices[4]:
-      query.addRole();
+      addRole();
       break;
     case questions.mainMenu.choices[5]:
-      query.viewDepts();
+      viewDepts();
       break;
     case questions.mainMenu.choices[6]:
-      query.addDept();
+      addDept();
       break;
     case questions.mainMenu.choices[7]:
       break;
@@ -44,6 +44,62 @@ async function init() {
       text = "Please select a valid choice";
   }
 }
+
+function viewEmployees() {
+  const sqlQuery =
+    'SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary,CONCAT (m.first_name," ", m.last_name) AS manager FROM employee LEFT JOIN employee as m ON m.id = employee.manager_id JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id';
+  dbConnection.query(sqlQuery, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("\n");
+      console.table(results);
+      init();
+    }
+  });
+}
+
+function viewRoles() {
+  const sqlQuery = "SELECT id, title, salary, department_id FROM role";
+  dbConnection.execute(sqlQuery, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.table(results);
+      init();
+    }
+  });
+}
+
+function viewDepts() {
+  const sqlQuery = "SELECT id, name FROM department";
+  dbConnection.execute(sqlQuery, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      return console.table(results);
+    }
+  });
+}
+
+function addEmployee() {
+  const sqlQuery = ("INSERT INTO employee SET ?", data);
+  dbConnection.execute(sqlQuery, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.table(results);
+      init();
+    }
+  });
+}
+
+function addRole() {}
+
+function addDept() {}
+
+function updateRole() {}
+
 // main function calls
 renderBanner();
 init();
