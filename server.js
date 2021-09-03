@@ -85,9 +85,9 @@ function viewDepts() {
 // TODO: function to add a new employee
 async function addEmployee() {
   //select roles from the database to pass into question choices
-  const roleQuery = "SELECT title FROM role";
+  const roleQuery = "SELECT title AS name FROM role";
   dbConnection.query(roleQuery, async (err, roles) => {
-    const mgrQuery = 'SELECT CONCAT (first_name," ", last_name) as manager FROM employee WHERE manager_id IS NULL';
+    const mgrQuery = 'SELECT CONCAT (first_name," ", last_name) as name FROM employee WHERE manager_id IS NULL';
     dbConnection.query(mgrQuery, async (err, managers) => {
       console.log(roles);
       console.log(managers);
