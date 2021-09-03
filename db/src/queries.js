@@ -1,6 +1,7 @@
 // import required libraries
 const dbConnection = require("../config/connection");
 const cTable = require("console.table");
+const init = require("../../server");
 
 // class holding all db query methods for use throughout the app
 class DBQuery {
@@ -11,13 +12,15 @@ class DBQuery {
       if (err) {
         console.log(err);
       } else {
-        return console.table(results);
+        console.table(results);
+        init();
       }
     });
   }
-  addEmployeeToDB(data) {
-    const sqlQuery = ("INSERT INTO employee SET ?", data);
-    dbConnection.query(sqlQuery, (err, results) => {
+
+  async viewRoles() {
+    const sqlQuery = "SELECT id, title, salary, department_id FROM role";
+    await dbConnection.execute(sqlQuery, (err, results) => {
       if (err) {
         console.log(err);
       } else {
@@ -25,6 +28,33 @@ class DBQuery {
       }
     });
   }
-}
 
+  async viewDepts() {
+    const sqlQuery = "SELECT id, name FROM department";
+    await dbConnection.execute(sqlQuery, (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        return console.table(results);
+      }
+    });
+  }
+
+  async addEmployee(data) {
+    const sqlQuery = ("INSERT INTO employee SET ?", data);
+    await dbConnection.execute(sqlQuery, (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        return console.table(results);
+      }
+    });
+  }
+
+  addRole() {}
+
+  addDept() {}
+
+  updateRole() {}
+}
 module.exports = DBQuery;

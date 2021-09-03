@@ -20,24 +20,23 @@ async function init() {
     case questions.mainMenu.choices[0]:
       query.viewEmployees();
       break;
-    //TODO: write rest of switch cases below
     case questions.mainMenu.choices[1]:
-      query.viewEmployees();
+      query.addEmployee();
       break;
     case questions.mainMenu.choices[2]:
-      query.viewEmployees();
+      query.updateRole();
       break;
     case questions.mainMenu.choices[3]:
-      query.viewEmployees();
+      query.viewRoles();
       break;
     case questions.mainMenu.choices[4]:
-      query.viewEmployees();
+      query.addRole();
       break;
     case questions.mainMenu.choices[5]:
-      query.viewEmployees();
+      query.viewDepts();
       break;
     case questions.mainMenu.choices[6]:
-      query.viewEmployees();
+      query.addDept();
       break;
     case questions.mainMenu.choices[7]:
       break;
@@ -45,7 +44,8 @@ async function init() {
       text = "Please select a valid choice";
   }
 }
-
 // main function calls
 renderBanner();
 init();
+
+module.exports = init;
