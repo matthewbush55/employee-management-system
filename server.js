@@ -61,7 +61,7 @@ function viewEmployees() {
 
 function viewRoles() {
   const sqlQuery = "SELECT id, title, salary, department_id FROM role";
-  dbConnection.execute(sqlQuery, (err, results) => {
+  dbConnection.query(sqlQuery, (err, results) => {
     if (err) {
       console.log(err);
     } else {
@@ -73,18 +73,19 @@ function viewRoles() {
 
 function viewDepts() {
   const sqlQuery = "SELECT id, name FROM department";
-  dbConnection.execute(sqlQuery, (err, results) => {
+  dbConnection.query(sqlQuery, (err, results) => {
     if (err) {
       console.log(err);
     } else {
-      return console.table(results);
+      console.table(results);
     }
   });
 }
 
+// function to add a new employee
 function addEmployee() {
   const sqlQuery = ("INSERT INTO employee SET ?", data);
-  dbConnection.execute(sqlQuery, (err, results) => {
+  dbConnection.query(sqlQuery, (err, results) => {
     if (err) {
       console.log(err);
     } else {
@@ -94,10 +95,46 @@ function addEmployee() {
   });
 }
 
-function addRole() {}
+// function to add a new role
+async function addRole() {
+  dbConnection.query("SELECT name FROM department", async (err, departments) => {
+    const response = await inquirer.prompt(questions.addRoleQuestions(departments));
 
-function addDept() {}
+    // create variable to hold newRole object properties
+    const newRole = {};
+    newRole.title = response.new_role_title;
+    newRole.salary = response.new_role_salary;
 
+    dbConnection.query("SELECT id FROM department WHERE name = ?", response.new_role_dept, (err, response) => {
+      newRole.department_id = response[0].id;
+      const sqlQuery = "INSERT INTO role SET ?";
+      dbConnection.query(sqlQuery, newRole, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Role Added");
+          init();
+        }
+      });
+    });
+  });
+}
+
+// function to add a new department
+async function addDept() {
+  const sqlQuery = "INSERT INTO department SET ?";
+  const response = await inquirer.prompt(questions.addDeptQuestions());
+  dbConnection.query(sqlQuery, { name: response.new_dept_name }, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Department added");
+      init();
+    }
+  });
+}
+
+// function to update a role in the database
 function updateRole() {}
 
 // main function calls
