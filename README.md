@@ -17,6 +17,8 @@ This application allows users to manage a database of employees. Information inc
 
 ![Walkthrough](assets/images/Walkthrough.gif)
 
+[Link to Walkthrough](https://drive.google.com/file/d/1vuSCKcWBlqb0vv498Oykm4ilC-lPszlg/view)
+
 ## Installation
 
 After cloning the repository, install necessary dependencies by adding the following items to you package.json file and running `npm i`:
