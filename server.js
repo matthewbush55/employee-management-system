@@ -164,12 +164,11 @@ async function updateRole() {
   // query database for all employees to pass into questions
   const empQuery = 'SELECT id, CONCAT (first_name," ", last_name) as name FROM employee';
   dbConnection.query(empQuery, async (err, employees) => {
-    console.log(employees);
     const roleQuery = "SELECT title AS name FROM role";
     dbConnection.query(roleQuery, async (err, roles) => {
       const answers = await inquirer.prompt(questions.updateEmpRoleQuestions(employees, roles));
       console.log(answers);
-      dbConnection.query("SELECT role_id FROM employee WHERE id = ?", answers.id, (err, response) => {
+      dbConnection.query("SELECT role_id FROM employee WHERE id = ?", answers.employee, (err, response) => {
         // const newRole = {};
         // newRole.role_id = response[0].id;
         // newRole.employee =
