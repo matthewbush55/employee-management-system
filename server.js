@@ -6,6 +6,7 @@ const cTable = require("console.table");
 // banner libraries
 const banner = require("asciiart-logo");
 const config = require("./package.json");
+const { response } = require("express");
 
 // render banner image
 function renderBanner() {
@@ -88,6 +89,7 @@ async function addEmployee() {
   //select roles from the database to pass into question choices
   const roleQuery = "SELECT title AS name FROM role";
   dbConnection.query(roleQuery, async (err, roles) => {
+    //select managers from the db to pass into question choices
     const mgrQuery = 'SELECT CONCAT (first_name," ", last_name) as name FROM employee WHERE manager_id IS NULL';
     dbConnection.query(mgrQuery, async (err, managers) => {
       const answers = await inquirer.prompt(questions.addEmployeeQuestions(roles, managers));
@@ -96,7 +98,7 @@ async function addEmployee() {
       newEmployee.last_name = answers.last_name;
       dbConnection.query("SELECT id FROM role WHERE title = ?", answers.role, (err, response) => {
         newEmployee.role_id = response[0].id;
-        //TODO: get manager id working
+
         dbConnection.query(
           'SELECT id FROM employee WHERE CONCAT (first_name," ", last_name) = ?',
           answers.manager,
@@ -159,12 +161,60 @@ async function addDept() {
 
 // TODO: function to update a role in the database
 async function updateRole() {
-  const sqlQuery = 'SELECT CONCAT (first_name," ", last_name) as name FROM employee';
-  const response = await inquirer.prompt(questions.updateEmpRoleQuestions(employees));
-  dbConnection.query(sqlQuery, {});
+  // query database for all employees to pass into questions
+  const empQuery = 'SELECT id, CONCAT (first_name," ", last_name) as name FROM employee';
+  dbConnection.query(empQuery, async (err, employees) => {
+    console.log(employees);
+    const roleQuery = "SELECT title AS name FROM role";
+    dbConnection.query(roleQuery, async (err, roles) => {
+      const answers = await inquirer.prompt(questions.updateEmpRoleQuestions(employees, roles));
+      console.log(answers);
+      dbConnection.query("SELECT role_id FROM employee WHERE id = ?", answers.id, (err, response) => {
+        // const newRole = {};
+        // newRole.role_id = response[0].id;
+        // newRole.employee =
+        // console.log(newRole);
+        // dbConnection.query("UPDATE employee SET ? WHERE ?", newRole.role_id, (err) => {
+        //   if (err) {
+        //     console.log(err);
+        //   } else {
+        //     console.log("Role Updated");
+        //     init();
+        //   }
+        // });
+      });
+    });
+  });
 }
 
-// main function calls
+// async function addEmployee() {
+//   //select roles from the database to pass into question choices
+//   const roleQuery = "SELECT title AS name FROM role";
+//   dbConnection.query(roleQuery, async (err, roles) => {
+//     //select managers from the db to pass into question choices
+//     const mgrQuery = 'SELECT CONCAT (first_name," ", last_name) as name FROM employee WHERE manager_id IS NULL';
+//     dbConnection.query(mgrQuery, async (err, managers) => {
+//       const answers = await inquirer.prompt(questions.addEmployeeQuestions(roles, managers));
+//       const newEmployee = {};
+//       newEmployee.first_name = answers.first_name;
+//       newEmployee.last_name = answers.last_name;
+//       dbConnection.query("SELECT id FROM role WHERE title = ?", answers.role, (err, response) => {
+//         newEmployee.role_id = response[0].id;
+
+//         dbConnection.query(
+//           'SELECT id FROM employee WHERE CONCAT (first_name," ", last_name) = ?',
+//           answers.manager,
+//           (err, response) => {
+//             newEmployee.manager_id = response[0].id;
+
+//             dbConnection.query("INSERT INTO employee SET ?", newEmployee, (err) => {
+//               if (err) {
+//                 console.log(err);
+//               } else {
+//                 console.log("Employee Added");
+//                 init();
+//               }
+
 renderBanner();
 init();
 
