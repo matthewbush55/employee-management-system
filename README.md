@@ -17,7 +17,7 @@ This application allows users to manage a database of employees. Information inc
 
 ![Walkthrough](assets/images/Walkthrough.gif)
 
-[Link to Walkthrough](https://drive.google.com/file/d/1vuSCKcWBlqb0vv498Oykm4ilC-lPszlg/view)
+[Link to Walkthrough](https://drive.google.com/file/d/1ySYdoiHt-t1J2p-AVgXOjNzu_LXu3LGn/view)
 
 ## Installation
 
