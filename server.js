@@ -80,6 +80,7 @@ function viewDepts() {
       console.log(err);
     } else {
       console.table(results);
+      init();
     }
   });
 }
