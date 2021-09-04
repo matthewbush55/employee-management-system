@@ -19,7 +19,7 @@ This application allows users to manage a database of employees. Information inc
 
 ## Installation
 
-To install necessary dependencies, add the following items to you package.json file and run `npm i`:
+After cloning the repository, install necessary dependencies by adding the following items to you package.json file and running `npm i`:
 
     "asciiart-logo": "^0.2.6",
     "console.table": "^0.10.0",
@@ -28,6 +28,8 @@ To install necessary dependencies, add the following items to you package.json f
     "inquirer": "^8.1.2",
     "mysql2": "^2.3.0",
     "sequelize": "^6.6.5"
+
+NOTE: You may also want to add `node_modules` to your `.gitignore` file to prevent unnecessary library uploads to your repository.
 
 Database Setup:
 
